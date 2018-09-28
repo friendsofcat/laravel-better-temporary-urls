@@ -2,9 +2,11 @@
 
 namespace FriendsOfCat\Tests\LaravelBetterTemporaryUrls;
 
+use Carbon\Carbon;
 use FriendsOfCat\LaravelBetterTemporaryUrls\Http\Controller\LocalFilesystemTemporaryUrlController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\ValidateSignature;
+use Illuminate\Support\Facades\Storage;
 
 class LocalAdapterRouteTest extends TestCase
 {
@@ -25,4 +27,45 @@ class LocalAdapterRouteTest extends TestCase
         $this->assertRouteAssignedToMiddleware($route, ValidateSignature::class);
     }
 
+    public function testTemporaryRoute()
+    {
+        Storage::shouldReceive('exists')
+            ->andReturn(true);
+        Storage::shouldReceive('path')
+            ->andReturn(__DIR__ . '/../fixtures/a.txt');
+
+        $this->get($this->getTemporarySignedTestUrl())
+            ->assertSuccessful()
+            ->assertHeader('Cache-Control', 'private, must-revalidate');
+    }
+
+    public function testTemporaryRouteFileDoesntExist()
+    {
+        Storage::shouldReceive('exists')
+            ->andReturn(false);
+
+        $this->get($this->getTemporarySignedTestUrl())
+            ->assertStatus(400);
+    }
+
+    public function testTemporaryRouteThrowsException()
+    {
+        Storage::shouldReceive('exists')
+            ->andReturn(true);
+        Storage::shouldReceive('path')
+            ->andReturn(new \Exception('BROKEN'));
+
+        $this->get($this->getTemporarySignedTestUrl())
+            ->assertStatus(422);
+    }
+
+    /**
+     * @return string
+     */
+    private function getTemporarySignedTestUrl()
+    {
+        $url_generator = $this->app->get('url');
+        $expires = Carbon::now()->addMinute();
+        return $url_generator->temporarySignedRoute('lbtu.temporary-url', $expires, ['path' => 'fixtures/a.txt']);
+    }
 }

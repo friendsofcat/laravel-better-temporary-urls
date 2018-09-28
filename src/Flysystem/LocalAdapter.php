@@ -17,7 +17,7 @@ class LocalAdapter extends FlysystemLocalAdapter
      */
     public function getTemporaryUrl($path, $ttl, array $options = [])
     {
-        $options = array_merge($options, ['path' => $path]);
-        return URL::signedRoute('lbtu.temporary-url', $options, $ttl);
+        $parameters = array_merge($options, ['path' => $path]);
+        return URL::temporarySignedRoute('lbtu.temporary-url', $ttl, $parameters);
     }
 }

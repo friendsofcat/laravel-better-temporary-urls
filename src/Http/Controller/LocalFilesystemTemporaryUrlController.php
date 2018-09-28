@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LocalFilesystemTemporaryUrlController extends Controller
 {
@@ -14,18 +15,18 @@ class LocalFilesystemTemporaryUrlController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function handle(Request $request)
     {
         try {
             if (!$request->filled('path') || !Storage::exists($request->path)) {
-                return response('');
+                return response(sprintf('File not found: "%s"', $request->path), 400);
             }
 
-            return response()->file(Storage::path($request->path), [
-                'Cache-Control' => 'no-cache',
-            ]);
+            $file_path = Storage::path($request->path);
+
+            return new BinaryFileResponse($file_path, 200, [], false);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::debug($e->getTraceAsString());
