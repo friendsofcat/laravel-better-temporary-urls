@@ -6,12 +6,22 @@
         "php": ">=7.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.3"
+        "phpunit/phpunit": "^7.3",
+        "orchestra/testbench": "^3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "FriendsOfCat\\LaravelBetterTemporaryUrls\\": "src/"
+        }
     },
     "authors": [
         {
             "name": "Damian Lee",
             "email": "damiankloip@gmail.com"
+        },
+        {
+            "name": "Luis Dalmolin",
+            "email": "luis@kirschbaumdevelopment.com"
         }
     ]
 }
