@@ -11,12 +11,13 @@ class AwsS3Adapter extends FlysystemAwsS3Adapter
      * Replacement for \Illuminate\Filesystem\FilesystemAdapter::getAwsTemporaryUrl
      * to NOT make additional network requests to fetch a signed URL for an object.
      *
-     * @param $path
+     * @param string $path
      * @param $expiration
-     * @param $options
+     * @param array $options
+     *
      * @return string
      */
-    public function getTemporaryUrl($path, $expiration, $options)
+    public function getTemporaryUrl($path, $expiration, array $options = [])
     {
         $bucket = $this->getBucket();
         $expires = $this->convertToTimestamp($expiration);
