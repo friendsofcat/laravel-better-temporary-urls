@@ -1,8 +1,10 @@
 <?php
 
-// Temporary URLs fron routes are only available on local envs
-if (config('filesystems.default', 'local') === 'local') {
+use Illuminate\Routing\Middleware\ValidateSignature;
+
+// Temporary URLs fron routes are only available on local envs.
+if (config('laravel-better-temporary-urls.adapters.local', true)) {
     Route::get('temporary', 'LocalFilesystemTemporaryUrlController@handle')
         ->name('lbtu.temporary-url')
-        ->middleware(\Illuminate\Routing\Middleware\ValidateSignature::class);
+        ->middleware(ValidateSignature::class);
 }
