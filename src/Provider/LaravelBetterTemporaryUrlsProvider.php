@@ -25,13 +25,17 @@ class LaravelBetterTemporaryUrlsProvider extends ServiceProvider
      */
     public function boot()
     {
-        if ($this->localFilesystemIsDefault()) {
+        if ($this->filesystemOverrideIsEnabled('local')) {
             $this->registerLocalFilesystem();
         }
 
-        $this->registerS3Filesystem();
+        if ($this->filesystemOverrideIsEnabled('s3')) {
+            $this->registerS3Filesystem();
+        }
 
         $this->bootRoutes();
+
+        $this->publishConfiguration();
     }
 
     /**
@@ -110,10 +114,23 @@ class LaravelBetterTemporaryUrlsProvider extends ServiceProvider
     }
 
     /**
+     * @param string $adapter
+     *
      * @return bool
      */
-    protected function localFilesystemIsDefault()
+    protected function filesystemOverrideIsEnabled(string $adapter)
     {
-        return config('filesystems.default', 'local') === 'local';
+        $key = sprintf('laravel-better-temporary-urls.adapters.%s', $adapter);
+        return (bool) config($key, true);
+    }
+
+    /**
+     * Publish configuration files.
+     */
+    protected function publishConfiguration()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/laravel-better-temporary-urls.php' => config_path('laravel-better-temporary-urls.php'),
+        ], 'config');
     }
 }
