@@ -1,6 +1,6 @@
 <?php
 
-namespace FriendsofCat\LaravelBetterTemporaryUrls\Flysystem;
+namespace FriendsOfCat\LaravelBetterTemporaryUrls\Flysystem;
 
 use League\Flysystem\AwsS3v3\AwsS3Adapter as FlysystemAwsS3Adapter;
 

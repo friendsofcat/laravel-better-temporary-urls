@@ -3,7 +3,7 @@
 namespace FriendsOfCat\LaravelBetterTemporaryUrls\Provider;
 
 use Aws\S3\S3Client;
-use FriendsofCat\LaravelBetterTemporaryUrls\Flysystem\AwsS3Adapter;
+use FriendsOfCat\LaravelBetterTemporaryUrls\Flysystem\AwsS3Adapter;
 use FriendsOfCat\LaravelBetterTemporaryUrls\Flysystem\LocalAdapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
