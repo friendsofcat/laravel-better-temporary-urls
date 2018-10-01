@@ -25,6 +25,13 @@
             "FriendsOfCat\\Tests\\LaravelBetterTemporaryUrls\\": "tests/src"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "FriendsOfCat\\LaravelBetterTemporaryUrls\\LaravelBetterTemporaryUrlsProvider"
+            ]
+        }
+    },
     "authors": [
         {
             "name": "Damian Lee",
