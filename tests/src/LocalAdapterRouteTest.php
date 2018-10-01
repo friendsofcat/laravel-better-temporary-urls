@@ -29,14 +29,18 @@ class LocalAdapterRouteTest extends TestCase
 
     public function testTemporaryRoute()
     {
+        Carbon::setTestNow();
+
         Storage::shouldReceive('exists')
             ->andReturn(true);
         Storage::shouldReceive('path')
             ->andReturn(__DIR__ . '/../fixtures/a.txt');
 
+        $expected_expires_header = Carbon::now()->addMinute()->format('D, d M Y H:i:s') . ' GMT';
         $this->get($this->getTemporarySignedTestUrl())
             ->assertSuccessful()
-            ->assertHeader('Cache-Control', 'private, must-revalidate');
+            ->assertHeader('Cache-Control', 'private, must-revalidate')
+            ->assertHeader('Expires', $expected_expires_header);
     }
 
     public function testTemporaryRouteFileDoesntExist()

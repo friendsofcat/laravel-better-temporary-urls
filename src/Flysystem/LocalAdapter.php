@@ -10,7 +10,7 @@ class LocalAdapter extends FlysystemLocalAdapter
 
     /**
      * @param string $path
-     * @param $ttl
+     * @param int|\DateTimeInterface $ttl
      * @param array $options
      *
      * @return string

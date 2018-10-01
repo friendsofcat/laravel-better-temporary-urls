@@ -2,6 +2,7 @@
 
 namespace FriendsOfCat\LaravelBetterTemporaryUrls\Http\Controller;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -26,7 +27,16 @@ class LocalFilesystemTemporaryUrlController extends Controller
 
             $file_path = Storage::path($request->path);
 
-            return new BinaryFileResponse($file_path, 200, [], false);
+            $response = new BinaryFileResponse($file_path, 200, [], false);
+
+            $expires = $request->query('expires');
+            if ($expires) {
+                $expire_time = Carbon::createFromTimestamp($expires);
+                $response->setExpires($expire_time)
+                ;
+            }
+
+            return $response;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::debug($e->getTraceAsString());
