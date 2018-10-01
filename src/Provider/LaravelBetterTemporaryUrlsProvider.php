@@ -130,7 +130,7 @@ class LaravelBetterTemporaryUrlsProvider extends ServiceProvider
     protected function publishConfiguration()
     {
         $this->publishes([
-            __DIR__ . '/../config/laravel-better-temporary-urls.php' => config_path('laravel-better-temporary-urls.php'),
+            __DIR__ . '/../../laravel-better-temporary-urls.php' => config_path('laravel-better-temporary-urls.php'),
         ], 'config');
     }
 }
