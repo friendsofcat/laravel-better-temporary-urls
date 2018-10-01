@@ -25,5 +25,4 @@ class LocalAdapterRouteDisabledTest extends TestCase
         $router = $this->app->get('router');
         $this->assertFalse($router->getRoutes()->hasNamedRoute('lbtu.temporary-url'));
     }
-
 }

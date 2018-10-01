@@ -34,6 +34,11 @@
             ]
         }
     },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs -p --standard=PSR2 --extensions=php src tests",
+        "fix-style": "phpcbf -p --standard=PSR2 src tests"
+    },
     "authors": [
         {
             "name": "Damian Lee",
