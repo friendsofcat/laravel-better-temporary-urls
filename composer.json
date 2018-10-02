@@ -28,7 +28,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "FriendsOfCat\\LaravelBetterTemporaryUrls\\LaravelBetterTemporaryUrlsProvider"
+                "FriendsOfCat\\LaravelBetterTemporaryUrls\\Provider\\LaravelBetterTemporaryUrlsProvider"
             ]
         }
     },
