@@ -37,8 +37,13 @@ class AwsS3Adapter extends FlysystemAwsS3Adapter
         $hmac = hash_hmac('sha1', $request, $awsSecret, true);
         $base64hmac = urlencode(base64_encode($hmac));
 
-        $url = 'https://%s.s3.%s.amazonaws.com/%s?AWSAccessKeyId=%s&Expires=%s&Signature=%s';
-        return sprintf($url, $bucket, $awsRegion, $full_path, $awsKeyId, $expires, $base64hmac);
+        if ($client->getEndpoint() === 'https://s3.amazonaws.com') {
+            $baseUrl = sprintf('https://%s.s3.%s.amazonaws.com', $bucket, $awsRegion);
+        } else {
+            $baseUrl = sprintf('%s/%s', $client->getEndpoint(), $bucket);
+        }
+
+        return sprintf('%s/%s?AWSAccessKeyId=%s&Expires=%s&Signature=%s', $baseUrl, $full_path, $awsKeyId, $expires, $base64hmac);
     }
 
     /**
