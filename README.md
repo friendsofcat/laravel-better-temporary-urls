@@ -1,5 +1,7 @@
 # Laravel Better Temporary URLs
 
+[![Actions Status](https://github.com/friendsofcat/laravel-better-temporary-urls/workflows/CI/badge.svg)](https://github.com/friendsofcat/laravel-better-temporary-urls/actions)
+
 Better Support for Temporary URLs in Laravel Filesystems
 
 ### Installation
