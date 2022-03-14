@@ -2,11 +2,12 @@
 
 namespace FriendsOfCat\LaravelBetterTemporaryUrls\Flysystem;
 
-use League\Flysystem\AwsS3v3\AwsS3Adapter as FlysystemAwsS3Adapter;
+use Aws\S3\S3Client;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\PathPrefixer;
 
-class AwsS3Adapter extends FlysystemAwsS3Adapter
+class AwsS3Adapter extends AwsS3V3Adapter
 {
-
     /**
      * Replacement for \Illuminate\Filesystem\FilesystemAdapter::getAwsTemporaryUrl
      * to NOT make additional network requests to fetch a signed URL for an object.
@@ -19,16 +20,20 @@ class AwsS3Adapter extends FlysystemAwsS3Adapter
      */
     public function getTemporaryUrl($path, $expiration, array $options = [])
     {
-        $bucket = $this->getBucket();
+        $bucket = config('filesystems.s3.bucket');
         $expires = $this->convertToTimestamp($expiration);
 
-        $client = $this->getClient();
+        $client = app(S3Client::class);
+
         $credentials = $client->getCredentials()->wait();
 
         $awsKeyId = $credentials->getAccessKeyId();
         $awsSecret = $credentials->getSecretKey();
         $awsRegion = $client->getConfig('signing_region');
-        $full_path = $this->applyPathPrefix($path);
+
+        $prefixer = new PathPrefixer(config('filesystems.s3.root'));
+
+        $full_path = $prefixer->prefixDirectoryPath($path);
 
         $amzHeaders = '';
         $amzResource = sprintf('/%s/%s', $bucket, $full_path);

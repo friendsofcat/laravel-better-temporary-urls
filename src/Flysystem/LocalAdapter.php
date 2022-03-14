@@ -3,7 +3,7 @@
 namespace FriendsOfCat\LaravelBetterTemporaryUrls\Flysystem;
 
 use Illuminate\Support\Facades\URL;
-use League\Flysystem\Adapter\Local as FlysystemLocalAdapter;
+use League\Flysystem\Local\LocalFilesystemAdapter as FlysystemLocalAdapter;
 
 class LocalAdapter extends FlysystemLocalAdapter
 {

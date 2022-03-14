@@ -7,7 +7,7 @@ use FriendsOfCat\LaravelBetterTemporaryUrls\Flysystem\AwsS3Adapter;
 use FriendsOfCat\LaravelBetterTemporaryUrls\Flysystem\LocalAdapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
-use League\Flysystem\AdapterInterface;
+use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Filesystem;
 
 class LaravelBetterTemporaryUrlsProvider extends ServiceProvider
@@ -54,13 +54,12 @@ class LaravelBetterTemporaryUrlsProvider extends ServiceProvider
     protected function registerLocalFilesystem()
     {
         $this->app->get('filesystem')->extend('local', function ($app, $config) {
-            $permissions = $config['permissions'] ?? [];
             $links = ($config['links'] ?? null) === 'skip'
                 ? LocalAdapter::SKIP_LINKS
                 : LocalAdapter::DISALLOW_LINKS;
 
             return $this->createFlysystem(
-                new LocalAdapter($config['root'], LOCK_EX, $links, $permissions),
+                new LocalAdapter($config['root'], null, LOCK_EX, $links, null),
                 $config
             );
         });
@@ -71,12 +70,12 @@ class LaravelBetterTemporaryUrlsProvider extends ServiceProvider
         $this->app->get('filesystem')->extend('s3', function ($app, $config) {
             $s3Config = $this->formatS3Config($config);
 
-            $root = $s3Config['root'] ?? null;
+            $root = $s3Config['root'] ?? '';
 
             $options = $config['options'] ?? [];
 
             return $this->createFlysystem(
-                new AwsS3Adapter(new S3Client($s3Config), $s3Config['bucket'], $root, $options),
+                new AwsS3Adapter(new S3Client($s3Config), $s3Config['bucket'] ?? '', $root, null, null, $options),
                 $config
             );
         });
@@ -102,15 +101,15 @@ class LaravelBetterTemporaryUrlsProvider extends ServiceProvider
     /**
      * Create a Flysystem instance with the given adapter.
      *
-     * @param  \League\Flysystem\AdapterInterface  $adapter
+     * @param  FilesystemAdapter  $adapter
      * @param  array  $config
-     * @return \League\Flysystem\FilesystemInterface
+     * @return Filesystem
      */
-    protected function createFlysystem(AdapterInterface $adapter, array $config)
+    protected function createFlysystem(FilesystemAdapter $adapter, array $config)
     {
         $config = Arr::only($config, ['visibility', 'disable_asserts', 'url']);
 
-        return new Filesystem($adapter, count($config) > 0 ? $config : null);
+        return new Filesystem($adapter, count($config) > 0 ? $config : []);
     }
 
     /**
