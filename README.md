@@ -6,6 +6,13 @@ Better Support for Temporary URLs in Laravel Filesystems
 
 ### Installation
 
+#### Versions
+| Package | Laravel |
+| --- | --- |
+| 1.x | 8.x |
+| 2.x | 9.x |
+
+
 `composer require friendsofcat/laravel-better-temporary-urls`
 
 This packages service provider is auto discovered, so the service provider does not need to be manually added.
