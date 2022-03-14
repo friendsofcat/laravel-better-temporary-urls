@@ -1,5 +1,5 @@
 {
-    "name": "selimsalihovic/laravel-better-temporary-urls",
+    "name": "friendsofcat/laravel-better-temporary-urls",
     "description": "Better temporary URL handling for Laravel filesystems",
     "type": "library",
     "require": {
