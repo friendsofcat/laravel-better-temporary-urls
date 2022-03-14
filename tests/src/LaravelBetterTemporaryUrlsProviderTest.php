@@ -30,8 +30,16 @@ class LaravelBetterTemporaryUrlsProviderTest extends TestCase
      */
     public function testS3Instance()
     {
-        $manager = app('filesystem');
-        $this->assertInstanceOf(AwsS3Adapter::class, $manager->disk('s3')->getAdapter());
+        $filesystemAdapter = app('filesystem')->disk('s3');
+
+        $reflectionObject = new \ReflectionObject($filesystemAdapter);
+
+        $adapterProperty = $reflectionObject->getProperty('adapter');
+        $adapterProperty->setAccessible(true);
+
+        $adapter = $adapterProperty->getValue($filesystemAdapter);
+
+        $this->assertInstanceOf(AwsS3Adapter::class, $adapter);
     }
 
     /**
@@ -41,7 +49,15 @@ class LaravelBetterTemporaryUrlsProviderTest extends TestCase
      */
     public function testLocalInstance()
     {
-        $manager = $this->app->get('filesystem');
-        $this->assertInstanceOf(LocalAdapter::class, $manager->disk('local')->getAdapter());
+        $filesystemAdapter = $this->app->get('filesystem')->disk('local');
+
+        $reflectionObject = new \ReflectionObject($filesystemAdapter);
+
+        $adapterProperty = $reflectionObject->getProperty('adapter');
+        $adapterProperty->setAccessible(true);
+
+        $adapter = $adapterProperty->getValue($filesystemAdapter);
+
+        $this->assertInstanceOf(LocalAdapter::class, $adapter);
     }
 }
